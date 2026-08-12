@@ -1,0 +1,250 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.kixie.com/
+docs: https://support.kixie.com/hc/en-us/articles/20871662051739-Managing-Kixie-Event-Webhooks-via-API
+
+name: Kixie webhook catalog
+description: >-
+  Kixie's event surface is webhook-only. It publishes no AsyncAPI document, no CloudEvents
+  binding, no streaming or WebSocket API and no event schema registry — but it does document
+  eight distinct outbound event types with full JSON payload examples, plus a management API for
+  registering them. This file is the webhook catalogue derived from those published payloads. No
+  AsyncAPI is emitted because Kixie ships none and one must not be fabricated on its behalf.
+
+asyncapi_published: false
+event_count: 8
+protocol: HTTPS
+method: POST
+content_type: application/json
+delivery: realtime
+envelope:
+  root_key: data
+  note: >-
+    Every documented payload is wrapped in a single top-level `data` object. Call-bearing events
+    nest the full call record under `data.callDetails`; the flatter events (dispositions, CI
+    summary, dial attempt) put call fields directly on `data`. Consumers must branch on event
+    shape, not just on `hookevent`.
+discriminator:
+  field: data.hookevent
+  note: >-
+    Present on most payloads, but not uniformly — the Start Call webhook's own documented example
+    carries "hookevent": "endcall", which is either a documentation defect or an actual
+    mislabelled emission. Either way a consumer that routes on `hookevent` alone cannot reliably
+    distinguish call start from call end. Verify against a live endpoint before relying on it.
+
+registration:
+  self_service: true
+  api: https://apig.kixie.com/app/v1/api/postwebhook
+  ui: Kixie Dashboard webhook settings
+  legacy_path: >-
+    Older documentation on developer.kixie.com still instructs integrators to email
+    support@kixie.com with their endpoint URL to have webhooks provisioned. The management API
+    supersedes this, but both instructions remain published.
+  filters:
+    direction:
+    - all
+    - incoming
+    - outgoing
+    callresult:
+    - all
+    - answered
+    - missed
+    disposition:
+    - all
+  custom_headers:
+    supported: true
+    format: JSON array of {name, value} objects, or the literal false for none
+  runtime: realtime
+
+security:
+  signature: none
+  hmac: false
+  shared_secret: only as an optional static custom header
+  timestamp_header: false
+  replay_protection: false
+  mtls: false
+  finding: >-
+    Kixie documents no cryptographic verification for webhook deliveries. A receiver cannot prove
+    a payload originated from Kixie. The payloads carry call recordings URLs, customer phone
+    numbers, agent emails, CRM record links and AI-generated call summaries — that is regulated
+    conversational content being posted to an unauthenticated endpoint. The only available
+    control is a static custom header, which is a plaintext bearer value with no rotation story
+    and no protection against replay of a captured payload.
+  remedy: >-
+    Sign deliveries with an HMAC over the raw body plus a timestamp header, publish the
+    verification recipe, and support secret rotation.
+
+delivery_guarantees:
+  retries: none documented
+  ordering: none documented
+  at_least_once: unknown
+  dead_letter: none documented
+  finding: >-
+    No retry schedule, backoff policy, delivery-attempt header, or replay/redelivery endpoint is
+    published. A receiver outage means silently lost call and SMS records with no documented way
+    to backfill them.
+
+events:
+- name: startcall
+  title: Start Call Webhook
+  summary: Emitted when a call starts.
+  hookevent: startcall
+  payload_root: data.callDetails
+  docs: https://developer.kixie.com/webhooks-start-call-webhook/
+  help_center: https://support.kixie.com/hc/en-us/articles/18238875912347--Start-Call-Webhook-Configuration-and-Data-Payload
+  note: >-
+    Kixie's published example for this event carries "hookevent": "endcall" — see the
+    discriminator note above.
+
+- name: answeredcall
+  title: Answered Call Webhook
+  summary: Emitted when a call is answered, carrying the full call record.
+  hookevent: answeredcall
+  payload_root: data.callDetails
+  docs: https://developer.kixie.com/webhooks-answered-call-webhook/
+
+- name: endcall
+  title: End Call Webhook
+  summary: >-
+    Emitted when a call ends, carrying the complete call record including duration, cost,
+    disposition and recording URL. The most commonly consumed Kixie event.
+  hookevent: endcall
+  payload_root: data.callDetails
+  filters:
+  - direction
+  - callresult
+  docs: https://developer.kixie.com/webhooks-end-call-webhook/
+
+- name: voicemail
+  title: Voicemail Webhook
+  summary: Emitted when a voicemail is left.
+  hookevent: voicemail
+  payload_root: data.callDetails
+  docs: https://developer.kixie.com/webhooks-voicemail-webhook/
+  help_center: https://support.kixie.com/hc/en-us/articles/18237786127643--Voicemail-Webhook-Configuration-and-Data-Payload
+
+- name: disposition
+  title: Disposition Webhook
+  summary: >-
+    Emitted when an agent leaves a call disposition. Carries the disposition and purpose labels,
+    optional note, the originating call record, and PowerList context.
+  hookevent: disposition
+  payload_root: data
+  docs: https://developer.kixie.com/webhooks-disposition-webhook/
+  help_center: https://support.kixie.com/hc/en-us/articles/18238735604379-Call-Outcome-Webhook-Configuration-and-Data-Payload
+
+- name: sms
+  title: SMS Webhook
+  summary: >-
+    Emitted on every SMS sent or received. Configurable in the dashboard to fire on incoming,
+    outgoing, or all messages. Includes the resolved CRM contact where one is matched.
+  hookevent: sms
+  payload_root: data
+  docs: https://developer.kixie.com/text-message-webhooks/
+
+- name: scheduledactivity
+  title: Scheduled Activity Webhook
+  summary: >-
+    Emitted when an agent schedules a follow-up activity from a call. Carries the activity
+    (type, date, time, timezone, duration) alongside the originating call record.
+  hookevent: scheduledactivity
+  payload_root: data
+  docs: https://developer.kixie.com/webhooks-scheduled-activity-webhook/
+  help_center: https://support.kixie.com/hc/en-us/articles/18235583591835--Schedule-Activity-Webhook-Configuration-Data-Payload
+  warning: >-
+    Kixie's published example payload for this event includes an `apiKey` field in the body. If
+    that reflects live behaviour, Kixie posts the account API key to the customer's webhook
+    endpoint on every scheduled-activity event — a credential leaving the trust boundary on an
+    unsigned, unverified channel. Worth confirming against a live endpoint and raising with the
+    provider.
+
+- name: cisummary
+  title: CI Summary Webhook
+  summary: >-
+    Emitted after a call ends when the Conversation Intelligence add-on is enabled. Carries an
+    AI-generated call summary, sentiment rank, conversation-strength score, talk-time breakdown
+    (agent monologue, customer story, patience) and boolean keyword/phrase hit maps.
+  hookevent: cisummary
+  payload_root: data
+  requires_addon: Conversation Intelligence
+  docs: https://developer.kixie.com/webhooks-ci-summary-webhook/
+
+- name: powerdialattempt
+  title: Dial Attempt Webhook
+  summary: >-
+    Emitted when a number is dialled but not connected to a live call during a PowerList session.
+    Carries the dial outcome, PowerList and session IDs, and the resulting contact status.
+  hookevent: powerdialattempt
+  payload_root: data
+  docs: https://developer.kixie.com/dial-attempt-webhook/
+  note: >-
+    Documented on developer.kixie.com and listed as a component on status.kixie.com, but not
+    included in the eight `eventname` values the Webhook Management API accepts. Registration may
+    therefore be dashboard-only. Counted separately from `event_count: 8`, which reflects the
+    management API's published enum.
+
+inbound_callbacks:
+  description: >-
+    Distinct from the outbound event webhooks: Kixie also calls INTO customer-operated endpoints
+    for its Custom CRM integration. These are contracts the customer implements and Kixie
+    consumes — the inverse direction — and they are the only place Kixie publishes a response
+    schema it expects to receive.
+  endpoints:
+  - name: contact-lookup
+    direction: kixie-calls-customer
+    method: GET
+    trigger: A user initiates a phone call.
+    request: E.164 phone number as a `number` query-string parameter.
+    response_schema:
+      found: boolean
+      contact: '{first_name, last_name, url, contact_id, email, phone_number, town, postal, state, address}'
+      deal: '{title, value, status, stage, deal_id, url} (optional)'
+      org: '{name} (optional)'
+    not_found_response: '{"found": false}'
+    note: Keys are snake_case here, unlike the camelCase used across the outbound webhooks.
+    docs: https://developer.kixie.com/custom-crm-integration/
+  - name: dispositions
+    direction: kixie-calls-customer
+    method: POST
+    summary: Kixie posts call disposition data to a customer-operated CRM endpoint.
+    docs: https://developer.kixie.com/custom-crm-dispositions/
+  - name: contact-edit
+    direction: kixie-calls-customer
+    method: POST
+    summary: >-
+      Kixie posts an edited contact record so the customer's CRM can be updated from within the
+      PowerCall dialer.
+    docs: https://developer.kixie.com/custom-crm-edit-contact/
+  - name: activities
+    direction: kixie-calls-customer
+    method: POST
+    summary: Kixie posts a scheduled future activity to a customer-operated CRM endpoint.
+    hookevent: customCRMactivity
+    docs: https://developer.kixie.com/custom-crm-schedule-activity/
+
+management_api:
+  base: https://apig.kixie.com/app/v1/api
+  operations:
+  - call: postWebhook
+    path: /postwebhook
+    method: POST
+    summary: Create a webhook.
+  - call: putWebhook
+    path: /postwebhook
+    method: POST
+    summary: >-
+      Update a webhook. Note the same path as create — the operation is selected by the `call`
+      field in the body, not by the route or HTTP verb.
+  - call: getWebhooks
+    path: /getWebhooks
+    method: POST
+    summary: List all webhooks for the account. POST is used for a read.
+  - call: removeWebhook
+    path: /deleteWebhooks
+    method: POST
+    summary: Delete a webhook by webhookid.
+  casing_note: >-
+    Path casing is inconsistent across the four operations — `/postwebhook` is lower-case while
+    `/getWebhooks` and `/deleteWebhooks` are camelCase — and the delete route is plural while it
+    deletes one webhook by id.
+  docs: https://support.kixie.com/hc/en-us/articles/20871662051739-Managing-Kixie-Event-Webhooks-via-API

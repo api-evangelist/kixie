@@ -1,0 +1,196 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.kixie.com/
+docs: https://developer.kixie.com/
+
+name: Kixie API conventions
+description: >-
+  Cross-cutting runtime semantics for the Kixie HTTP API, read from developer.kixie.com and the
+  Kixie help-center API articles. Kixie publishes no OpenAPI, so every statement below is taken
+  from prose documentation or from a documented request/response example. Where Kixie documents
+  nothing, this file says so rather than guessing.
+
+architecture:
+  style: rpc-over-http
+  note: >-
+    Kixie is not a resource-oriented REST API. The primary surface is a single endpoint,
+    POST https://apig.kixie.com/app/event, that dispatches on an `eventname` string in the JSON
+    body. The Webhook Management API follows the same shape with a `call` discriminator
+    (postWebhook / putWebhook / getWebhooks / removeWebhook) rather than HTTP verbs. Consequence
+    for an agent: the HTTP method and path carry almost no information — the operation lives in
+    the payload, so an integrator cannot enumerate the surface from routes.
+  method_usage: POST for every mutating and listing operation; GET only on the Agent Status lookup.
+  content_type: application/json
+  documented_verbs:
+  - POST
+  - GET
+
+dispatch:
+  discriminator: eventname
+  endpoint: https://apig.kixie.com/app/event
+  values:
+  - value: call
+    operation: Place an outbound call — rings the agent named by `email`, then dials `target`.
+    docs: https://developer.kixie.com/make-a-call/
+  - value: sms
+    operation: Send an SMS from the agent's Kixie number to `target`.
+    docs: https://developer.kixie.com/automation-send-sms/
+  - value: bizsms
+    operation: Send a Team/Business SMS from a shared Team SMS number.
+    docs: https://developer.kixie.com/team-sms-api/
+  - value: queue
+    operation: >-
+      Send a call to an inbound queue; with `action: remove` removes a number from the queue.
+    docs: https://developer.kixie.com/automation-send-to-queue/
+  - value: cadence
+    operation: >-
+      Add a contact to, or with `action: remove` remove it from, an automation cadence.
+    docs: https://developer.kixie.com/automation-send-to-cadence/
+  - value: updatepowerlist
+    operation: Add or update a single contact in a PowerList.
+    docs: https://support.kixie.com/hc/en-us/articles/19135310564635-PowerList-API
+  - value: removefrompowerlist
+    operation: >-
+      Remove one or more contacts from a PowerList (`action: removefrompowerlist`) or from every
+      PowerList (`action: removefromallpowerlists`).
+    docs: https://support.kixie.com/hc/en-us/articles/19135310564635-PowerList-API
+  secondary_discriminator:
+    name: action
+    note: >-
+      A second discriminator layered under `eventname` for the queue, cadence and PowerList
+      families. Two-level dispatch on untyped strings with no published enum.
+
+authentication:
+  summary: Account-scoped API key (`apikey`) plus Business ID (`businessid`), both in query and body.
+  see: authentication/kixie-authentication.yml
+
+idempotency:
+  supported: false
+  header: null
+  finding: >-
+    Kixie documents no idempotency key, no request-deduplication window, and no safe-retry
+    guidance on any endpoint. This matters more here than on most APIs: every primary operation
+    has an irreversible real-world side effect — a phone call is placed, an SMS is delivered to a
+    consumer, a contact is dialled. A network timeout on POST /app/event leaves the caller unable
+    to determine whether the call or message went out, and a naive retry double-dials or
+    double-texts a customer, which is both a spend event and a TCPA/carrier-reputation event.
+  partial_mitigation: >-
+    The PowerList write path is the one exception: `duplicateHandling` (overwrite | merge |
+    ignore) makes `updatepowerlist` effectively idempotent per target phone number, because a
+    PowerList contact is keyed on the target number. That is upsert semantics on one operation,
+    not a general idempotency facility.
+  remedy: >-
+    Accept an Idempotency-Key request header on POST /app/event, retain it for at least 24 hours,
+    and return the original response on replay.
+
+pagination:
+  supported: false
+  finding: >-
+    No documented paginated collection. `getWebhooks` returns all webhooks for an account in a
+    single response with no limit, cursor, offset or page parameter documented.
+
+filtering:
+  supported: partial
+  note: >-
+    Filtering exists only at webhook-registration time, not at query time — a webhook may be
+    scoped by `direction` (all | incoming | outgoing), `callresult` (all | answered | missed) and
+    `disposition`.
+
+versioning:
+  strategy: path-segment, applied inconsistently
+  observed:
+  - path: /app/event
+    version: unversioned
+  - path: /app/v1/api/postwebhook
+    version: v1
+  - path: /app/legacy/flushUserQueue
+    version: legacy
+  - path: /www/agent/status
+    version: unversioned
+  finding: >-
+    Three different versioning conventions coexist on one gateway host — an unversioned primary
+    endpoint, a `/v1/` management namespace, and an explicitly `/legacy/` namespace — with no
+    published policy explaining what `legacy` means, when it will be withdrawn, or what a `v2`
+    would change. See lifecycle/kixie-lifecycle.yml.
+  header_versioning: false
+  media_type_versioning: false
+
+error_envelope:
+  format: proprietary
+  rfc9457: false
+  finding: >-
+    Kixie publishes no error catalogue, no error-code registry, and no error response example for
+    any Event API or Webhook Management operation. The only documented response envelope in the
+    entire public reference belongs to the Agent Status API.
+  documented_envelope:
+    endpoint: https://apig.kixie.com/www/agent/status
+    shape:
+      success: boolean
+      result:
+        onCall: integer (0 | 1)
+        registered: integer (0 | 1)
+        device: string
+    note: >-
+      Booleans are transported as integers 0/1 inside `result` while `success` is a real boolean.
+      A false `success` on this endpoint means "agent not logged in / offline" — a business
+      outcome, not a transport or authorization failure — so `success` cannot be used as a
+      generic error signal.
+  http_status_semantics: undocumented
+  remedy: >-
+    Publish an error-code reference and adopt application/problem+json (RFC 9457) with a stable
+    `type` URI per failure class.
+
+rate_limiting:
+  documented: true
+  limit: 10000 requests per account per day
+  reset: '00:00 UTC'
+  response_headers: none documented
+  see: rate-limits/kixie-rate-limits.yml
+
+request_tracing:
+  request_id_header: none documented
+  correlation_ids_in_payload:
+  - callid
+  - externalid
+  - messageid
+  - powerlistsessionid
+  note: >-
+    No request-scoped trace identifier is returned to the API caller. Correlation is only
+    possible after the fact, via the `callid`/`externalid` UUIDs that appear in webhook payloads.
+
+phone_number_format:
+  standard: E.164
+  strictness: lenient
+  note: >-
+    Kixie states "most phone number formats will work fine, but for best results, use E.164".
+    Webhook payloads return both a loose `tonumber`/`fromnumber` and a normalised
+    `tonumber164`/`fromnumber164`, so consumers should read the 164-suffixed fields.
+
+custom_fields:
+  supported: true
+  mechanism: extraData
+  applies_to: updatepowerlist
+  note: >-
+    An open key/value object on the PowerList upsert; keys become PowerList column names. No
+    schema, no type system, no declared limit on key count or value length.
+
+webhooks:
+  supported: true
+  count: 8
+  delivery: HTTP POST, JSON, realtime
+  custom_headers: supported (JSON array of {name, value} pairs at registration)
+  signing: none documented
+  retries: none documented
+  finding: >-
+    Kixie documents no webhook signature, HMAC, shared secret or timestamp header. A receiver
+    cannot cryptographically verify that a payload came from Kixie; the only available control is
+    the optional static custom header set at registration time, which is a bearer secret in
+    plaintext and does not protect against replay.
+  see: asyncapi/kixie-webhooks.yml
+
+cross_links:
+  authentication: authentication/kixie-authentication.yml
+  rate_limits: rate-limits/kixie-rate-limits.yml
+  lifecycle: lifecycle/kixie-lifecycle.yml
+  webhooks: asyncapi/kixie-webhooks.yml
+  data_model: data-model/kixie-data-model.yml

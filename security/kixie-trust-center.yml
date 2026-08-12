@@ -1,0 +1,83 @@
+generated: '2026-08-12'
+method: searched
+source: https://www.kixie.com/security/
+docs: https://www.kixie.com/security/
+
+name: Kixie trust center
+description: >-
+  Kixie publishes a public trust page at https://www.kixie.com/security/, titled "Kixie Security,
+  Privacy, and Trust Resources" and self-described as "a routing page for public trust
+  information". It routes to the privacy policy, terms of use, status page and security contact.
+  It publishes ZERO certifications, and says so on purpose.
+
+published: true
+url: https://www.kixie.com/security/
+probed:
+  url: https://www.kixie.com/security/
+  http_status: 200
+  fetched: '2026-08-12'
+platform: first-party HTML page
+third_party_trust_platform: none
+last_reviewed: '2026-08-03'
+
+certifications: []
+certification_count: 0
+certifications_finding: >-
+  No SOC 2 Type I or II, ISO 27001, ISO 27701, PCI DSS, HIPAA/BAA, FedRAMP, StateRAMP, CSA STAR
+  or Cyber Essentials claim appears anywhere on Kixie's public surface. The page states the
+  omission is deliberate: "This public page intentionally does not claim a certification, audit
+  result, hosting architecture, retention period, or control that has not been confirmed for
+  publication."
+
+subresources_published:
+- name: Privacy Policy
+  url: https://www.kixie.com/privacy/
+  note: Kixie names this as the authoritative description of its safeguards and data handling.
+- name: Terms of Use
+  url: https://www.kixie.com/terms/
+  note: Named as the location of contractual terms.
+- name: Status page
+  url: https://status.kixie.com/
+  note: Availability and incident history; machine-readable via the Statuspage v2 API.
+- name: Security contact
+  value: security@kixie.com
+
+not_published:
+- SOC 2 or ISO report (even under NDA via a self-serve request flow)
+- subprocessor list
+- data-residency or hosting-architecture statement
+- data-retention periods (including for call recordings and transcriptions)
+- encryption-at-rest / in-transit control descriptions
+- penetration-test cadence or summary
+- incident-response or breach-notification commitment
+- uptime SLA
+- DPA availability statement
+
+evaluation_path:
+  self_serve: false
+  mechanism: >-
+    "Customers evaluating Kixie can ask their Kixie representative which current security,
+    privacy, and contractual materials are available for their review. Availability may depend on
+    the request and applicable confidentiality requirements."
+  finding: >-
+    Every security artefact an enterprise buyer needs sits behind a sales conversation with an
+    explicitly conditional outcome. There is no self-serve trust portal, no NDA-gated document
+    request form, and no list of what exists — a buyer cannot even learn WHICH reports Kixie holds
+    without contacting a representative.
+
+compliance_pointer_emitted: false
+compliance_pointer_note: >-
+  This repo emits a `TrustCenter` pointer because the page genuinely exists and is public, but
+  emits NO `Compliance` pointer, because Kixie publishes no certification or compliance-program
+  claim. Crediting Kixie with published compliance on the strength of a routing page would be
+  exactly the kind of presence-from-absence error this pipeline exists to avoid.
+
+assessment: >-
+  As a trust centre this is thin — it is a signpost, not a disclosure. But it is an honest
+  signpost, and honest thinness is materially better than the common alternative of a badge wall
+  asserting controls that were never audited. The gap that matters most for a communications
+  platform is retention: Kixie posts call-recording URLs and AI-generated call summaries to
+  customer webhook endpoints and publishes no retention period for either.
+
+domain_security: security/kixie-domain-security.yml
+vulnerability_disclosure: security/kixie-vulnerability-disclosure.yml

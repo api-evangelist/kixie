@@ -1,0 +1,204 @@
+generated: '2026-08-12'
+method: probed
+source: probe of /.well-known/* on every Kixie host
+
+name: Kixie .well-known probe
+description: >-
+  Every standard /.well-known/ discovery path was probed against all five Kixie hosts on
+  2026-08-12. Nothing was found. No document is served at any path on any host, so this repo
+  emits NO WellKnown, APICatalog or SecurityTxt pointer in apis.yml — a recorded absence is the
+  finding, not a surface.
+
+hit_count: 0
+documents_found: 0
+files: []
+
+false_positive_warning: >-
+  www.kixie.com and developer.kixie.com are WordPress sites with fuzzy-match URL redirection
+  enabled. Every /.well-known/* request returns HTTP 301 to an unrelated marketing page rather
+  than 404 — /.well-known/agent-card.json redirects to /integrations/agentforce-marketing/ and
+  /.well-known/api-catalog redirects to /features/animation/. A naive probe that follows
+  redirects and records the final 200 would credit Kixie with an A2A agent card and an API
+  catalog it does not serve. Every 301 below was followed and confirmed to resolve to an HTML
+  marketing page, not a document.
+
+hosts_probed:
+- host: www.kixie.com
+  paths:
+  - path: /.well-known/security.txt
+    status: 404
+    document: false
+  - path: /.well-known/openid-configuration
+    status: 301
+    document: false
+    note: WordPress fuzzy redirect to an unrelated HTML page.
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+    document: false
+    note: WordPress fuzzy redirect to an unrelated HTML page.
+  - path: /.well-known/api-catalog
+    status: 301
+    document: false
+    resolves_to: https://www.kixie.com/features/animation/
+    final_status: 200
+    final_content_type: text/html
+  - path: /.well-known/ai-plugin.json
+    status: 301
+    document: false
+  - path: /.well-known/agent-card.json
+    status: 301
+    document: false
+    resolves_to: https://www.kixie.com/integrations/agentforce-marketing/
+    final_status: 200
+    final_content_type: text/html
+  - path: /.well-known/agent.json
+    status: 301
+    document: false
+
+- host: developer.kixie.com
+  paths:
+  - path: /.well-known/security.txt
+    status: 404
+    document: false
+  - path: /.well-known/openid-configuration
+    status: 301
+    document: false
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+    document: false
+  - path: /.well-known/api-catalog
+    status: 301
+    document: false
+  - path: /.well-known/ai-plugin.json
+    status: 301
+    document: false
+  - path: /.well-known/agent-card.json
+    status: 301
+    document: false
+  - path: /.well-known/agent.json
+    status: 301
+    document: false
+
+- host: apig.kixie.com
+  note: >-
+    The production API gateway. Returns 403 to every unauthenticated request, including
+    /.well-known/*, so absence here is unproven rather than confirmed — but a discovery document
+    that requires credentials is not a discovery document.
+  paths:
+  - path: /.well-known/security.txt
+    status: 403
+    document: false
+  - path: /.well-known/openid-configuration
+    status: 403
+    document: false
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+    document: false
+  - path: /.well-known/api-catalog
+    status: 403
+    document: false
+  - path: /.well-known/ai-plugin.json
+    status: 403
+    document: false
+  - path: /.well-known/agent-card.json
+    status: 403
+    document: false
+  - path: /.well-known/agent.json
+    status: 403
+    document: false
+
+- host: api.kixie.com
+  paths:
+  - path: /.well-known/security.txt
+    status: 403
+    document: false
+  - path: /.well-known/openid-configuration
+    status: 403
+    document: false
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+    document: false
+  - path: /.well-known/api-catalog
+    status: 403
+    document: false
+  - path: /.well-known/ai-plugin.json
+    status: 403
+    document: false
+  - path: /.well-known/agent-card.json
+    status: 403
+    document: false
+  - path: /.well-known/agent.json
+    status: 403
+    document: false
+
+- host: app.kixie.com
+  note: The customer dashboard. Clean 404s, no fuzzy redirection.
+  paths:
+  - path: /.well-known/security.txt
+    status: 404
+    document: false
+  - path: /.well-known/openid-configuration
+    status: 404
+    document: false
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    document: false
+  - path: /.well-known/api-catalog
+    status: 404
+    document: false
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    document: false
+  - path: /.well-known/agent-card.json
+    status: 404
+    document: false
+  - path: /.well-known/agent.json
+    status: 404
+    document: false
+
+security_txt:
+  served: false
+  note: >-
+    No RFC 9116 security.txt is served on any host. Kixie does, however, publish a security
+    contact and reporting instructions as an HTML page at https://www.kixie.com/security/ —
+    captured in security/kixie-vulnerability-disclosure.yml. The policy exists; the machine-
+    readable pointer to it does not.
+  remedy: >-
+    Serve /.well-known/security.txt with Contact: mailto:security@kixie.com, Policy:
+    https://www.kixie.com/security/, Preferred-Languages and Expires. It is a four-line file.
+
+contract_discovery:
+  openapi_probes:
+  - url: https://apig.kixie.com/openapi.json
+    status: 403
+  - url: https://apig.kixie.com/swagger.json
+    status: 403
+  - url: https://apig.kixie.com/api-docs
+    status: 403
+  - url: https://apig.kixie.com/app/openapi.json
+    status: 403
+  - url: https://api.kixie.com/openapi.json
+    status: 403
+  - url: https://developer.kixie.com/openapi.json
+    status: 301
+    note: WordPress fuzzy redirect, not a spec.
+  - url: https://developer.kixie.com/openapi.yaml
+    status: 301
+  - url: https://developer.kixie.com/swagger.json
+    status: 301
+  - url: https://developer.kixie.com/api-docs
+    status: 301
+  graphql: none found — no /graphql surface documented or discoverable.
+  mcp:
+  - url: https://mcp.kixie.com/
+    status: 404
+  - url: https://www.kixie.com/mcp/
+    status: 200
+    note: >-
+      A WordPress fuzzy redirect resolving to the amoCRM integration marketing page. Not an MCP
+      server. Confirmed by fetching and reading the body.
+  agent_card: none found on any host (see hosts_probed above).
+  conclusion: >-
+    No machine-readable API contract of any kind is published by Kixie. The reference is
+    server-rendered HTML on developer.kixie.com plus Zendesk help-center articles — readable, but
+    not parseable into a contract without hand transcription.

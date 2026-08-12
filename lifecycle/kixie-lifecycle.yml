@@ -1,0 +1,148 @@
+generated: '2026-08-12'
+method: searched
+source: https://status.kixie.com/
+docs: https://developer.kixie.com/
+
+name: Kixie API lifecycle
+description: >-
+  Operational lifecycle posture for the Kixie API: what Kixie publishes about status, versioning,
+  deprecation and support, and what it does not. Kixie runs a real, public, machine-readable
+  status page with per-component granularity that includes API endpoints. It publishes no
+  versioning policy, no deprecation policy, no sunset commitment and no SLA.
+
+status_page:
+  published: true
+  url: https://status.kixie.com/
+  provider: Atlassian Statuspage
+  page_id: 1r98ntxtxwcr
+  machine_readable: true
+  api:
+    summary: https://status.kixie.com/api/v2/summary.json
+    history: https://status.kixie.com/history.json
+    format: Statuspage API v2 (JSON)
+    authentication: none
+  probed:
+    url: https://status.kixie.com/api/v2/summary.json
+    http_status: 200
+    fetched: '2026-08-12'
+  component_granularity: per-feature
+  api_components_tracked:
+  - Make a Call Endpoint
+  - Dial Attempt Webhook
+  - PowerCall
+  - Call Functionality
+  - Call History
+  - Cadence Functionality
+  - IVR Functionality
+  - Ring Group Functionality
+  - Manage Teams
+  - Manage Ring Groups
+  - Pipedrive C2C
+  - Hubspot C2C
+  - Salesforce C2C
+  - Zoho C2C
+  - GoHighLevel C2C
+  - Pipedrive Call Logging
+  - Hubspot Call Logging
+  - Salesforce Call Logging
+  - Zoho Call Logging
+  - Email
+  strength: >-
+    This is the strongest artifact in Kixie's operational posture. Named API components — "Make a
+    Call Endpoint" and "Dial Attempt Webhook" specifically — are tracked as first-class status
+    entities alongside the product, and the Statuspage v2 API is open, so an agent or monitoring
+    system can consume Kixie availability without scraping.
+
+versioning:
+  policy_published: false
+  strategy: path-segment, applied inconsistently
+  observed_namespaces:
+  - path: /app/event
+    label: unversioned
+    note: The primary and highest-traffic endpoint carries no version at all.
+  - path: /app/v1/api/*
+    label: v1
+  - path: /app/legacy/*
+    label: legacy
+    example: /app/legacy/flushUserQueue
+    note: >-
+      Kixie documents an endpoint under an explicitly `legacy` path on its current developer
+      site, with no statement of what legacy means, whether it is frozen, or when it will be
+      withdrawn. Documenting a legacy endpoint without a retirement date is the deprecation
+      question left open.
+  - path: /www/agent/status
+    label: unversioned
+  finding: >-
+    Four coexisting conventions on one gateway host and no published rule for which applies to a
+    new endpoint. An integrator cannot predict where a future operation will live.
+
+deprecation:
+  policy_published: false
+  sunset_header: not documented
+  deprecation_header: not documented
+  rfc8594_support: false
+  advance_notice_period: none published
+  deprecated_operations: []
+  finding: >-
+    No deprecation policy exists in Kixie's public documentation. No RFC 8594 `Sunset` header, no
+    `Deprecation` header, no changelog entry class for breaking changes, and no notice period
+    commitment. Combined with the undated `/app/legacy/` namespace, an integrator has no signal
+    that an endpoint is on its way out until it stops working.
+  note: >-
+    Because no policy is published, this repo emits no `Deprecation` pointer in apis.yml. The
+    absence is the finding.
+
+sla:
+  published: false
+  uptime_commitment: none published
+  support_response_commitment: none published
+  note: >-
+    Kixie publishes historical uptime on status.kixie.com but no contractual availability target.
+    Any SLA would sit in the Terms of Use or an enterprise agreement.
+
+support:
+  channels:
+  - type: help-center
+    url: https://support.kixie.com/hc/en-us
+  - type: ticket
+    url: https://support.kixie.com/hc/en-us/requests/new
+  - type: email
+    value: support@kixie.com
+  - type: developer-email
+    value: developers@kixie.com
+    note: Published in the footer of developer.kixie.com.
+  - type: live-chat
+    value: In the Kixie Dashboard
+    note: >-
+      Load-bearing rather than supplementary — live chat is the documented mechanism for getting
+      an API key activated at all.
+  - type: security-email
+    value: security@kixie.com
+    url: https://www.kixie.com/security/
+  us_based_support: true
+
+changelog:
+  published: true
+  see: changelog/kixie-changelog.yml
+  api_specific: false
+
+roadmap:
+  published: false
+  probed:
+  - url: https://www.kixie.com/roadmap/
+    http_status: 301
+    resolves_to: https://www.kixie.com/integrations/monday/
+    note: >-
+      A WordPress fuzzy-match redirect, not a roadmap. No public roadmap or feature-request
+      surface was found.
+
+gaps_summary:
+- No versioning policy despite four coexisting version conventions.
+- No deprecation policy, Sunset or Deprecation headers.
+- An undated /app/legacy/ namespace documented as current.
+- No published SLA or uptime commitment.
+- No public roadmap.
+strengths_summary:
+- Public Atlassian Statuspage with an open, unauthenticated JSON API.
+- Named API endpoints and webhooks tracked as individual status components.
+- A dedicated developer contact address and a dedicated security contact address.

@@ -1,0 +1,123 @@
+generated: '2026-08-12'
+method: searched
+source: https://support.kixie.com/hc/en-us/categories/4454592148635-Product-Updates
+docs: https://support.kixie.com/hc/en-us/categories/4454592148635-Product-Updates
+
+name: Kixie product change log
+description: >-
+  Kixie publishes dated product updates in a "Product Updates" category of its Zendesk help
+  center, split into two sections — Kixie Dashboard Updates and Kixie PowerCall Updates. There is
+  no API-specific changelog, no release-notes feed, and no version history for the HTTP API or the
+  webhook payload schemas. The product changelog itself has not been updated since February 2025.
+
+scheme: dated product updates (help-center articles), not semantic API versioning
+api_specific_changelog: false
+feed: none
+current_api_version: >-
+  Not applicable. The primary endpoint (/app/event) is unversioned; the webhook management
+  namespace is /app/v1/. See lifecycle/kixie-lifecycle.yml.
+current_client_version: 'PowerCall v2.28.x (last version number published, May 2023)'
+
+staleness:
+  last_entry: '2025-02-13'
+  checked: '2026-08-12'
+  months_since_last_entry: 18
+  finding: >-
+    The most recent dated product update is 13 February 2025 — roughly eighteen months before this
+    check. The product has demonstrably shipped in that window (the security page carries a
+    "Last reviewed: August 3, 2026" stamp, the pricing page was rebuilt around three new tier
+    names, and the help center gained an "AI Insights Guide"), so the changelog is stale rather
+    than the product being static. An integrator watching this surface for breaking changes would
+    have seen nothing for a year and a half.
+
+sections:
+- name: Kixie Dashboard Updates
+  url: https://support.kixie.com/hc/en-us/sections/4454612698011-Kixie-Dashboard-Updates
+  entry_count: 8
+- name: Kixie PowerCall Updates
+  url: https://support.kixie.com/hc/en-us/sections/12100254787227-Kixie-PowerCall-Updates
+  entry_count: 5
+
+entries:
+- date: '2025-02-13'
+  title: Kixie Dashboard and PowerCall Update – February 13th, 2025
+  section: Kixie Dashboard Updates
+  url: https://support.kixie.com/hc/en-us/articles/34015932071323-Kixie-Dashboard-and-PowerCall-Update-February-13th-2025
+  breaking: unknown
+  api_affecting: unknown
+- date: '2024-09-23'
+  title: Kixie Product Update - September 23rd, 2024
+  section: Kixie Dashboard Updates
+  url: https://support.kixie.com/hc/en-us/articles/28280286912795-Kixie-Product-Update-September-23rd-2024
+  breaking: unknown
+  api_affecting: unknown
+- date: '2024-07-15'
+  title: Kixie Product Update - July 15th, 2024
+  section: Kixie Dashboard Updates
+  url: https://support.kixie.com/hc/en-us/articles/27331947335195-Kixie-Product-Update-July-15th-2024
+  breaking: unknown
+  api_affecting: unknown
+- date: '2024-05-30'
+  title: Kixie Product Update - May 30th, 2024
+  section: Kixie Dashboard Updates
+  url: https://support.kixie.com/hc/en-us/articles/25597595290907-Kixie-Product-Update-May-30th-2024
+  breaking: unknown
+  api_affecting: unknown
+- date: '2023-06-14'
+  title: 'Legal Disclaimer: Do Not Call Registry Algorithm for Calls/SMS'
+  section: Kixie PowerCall Updates
+  url: https://support.kixie.com/hc/en-us/articles/16403691600155-Legal-Disclaimer-Do-Not-Call-Registry-Algorithm-for-Calls-SMS
+  breaking: false
+- date: '2023-06-13'
+  title: DNC Algorithm for Calls/SMS
+  section: Kixie PowerCall Updates
+  url: https://support.kixie.com/hc/en-us/articles/16376376568859-DNC-Algorithm-for-Calls-SMS
+  breaking: false
+- date: '2023-05-09'
+  title: Kixie PowerCall Update - May 9th, 2023 - v2.28.x
+  section: Kixie PowerCall Updates
+  url: https://support.kixie.com/hc/en-us/articles/15135673229979-Kixie-PowerCall-Update-May-9th-2023-v2-28-x
+  version: 2.28.x
+  breaking: unknown
+- date: '2023-03-30'
+  title: Kixie PowerCall Update - March 30 2023 - v2.27
+  section: Kixie PowerCall Updates
+  url: https://support.kixie.com/hc/en-us/articles/15097260537243-Kixie-PowerCall-Update-March-30-2023-v2-27
+  version: '2.27'
+  breaking: unknown
+- date: '2023-01-18'
+  title: Kixie PowerCall Update - January 18th, 2023 - v2.25.0
+  section: Kixie PowerCall Updates
+  url: https://support.kixie.com/hc/en-us/articles/12104605231259-Kixie-PowerCall-Update-January-18th-2023-v2-25-0
+  version: 2.25.0
+  breaking: unknown
+
+article_freshness_signal:
+  note: >-
+    The Zendesk Help Center API exposes `updated_at` per article, which is a better freshness
+    signal than the changelog for the API docs specifically. Most recent updates observed on the
+    API articles at the 2026-08-12 fetch.
+  observed:
+  - article: Kixie Authentication Overview
+    updated: '2026-05-27'
+  - article: Call Outcome Webhook - Configuration and Data Payload
+    updated: '2026-02-19'
+  - article: PowerList API
+    updated: '2026-02-13'
+  - article: Business/Team SMS API
+    updated: '2025-05-16'
+  - article: Make a Call API
+    updated: '2024-04-05'
+  - article: Send to Queue API
+    updated: '2024-03-15'
+  - article: Managing Kixie Event Webhooks via API
+    updated: '2024-02-19'
+
+gaps:
+- No RSS/Atom or JSON feed for product updates.
+- No API-specific changelog; API changes are not separated from product changes.
+- No breaking-change classification on any entry.
+- 18-month gap since the last dated entry.
+remedy: >-
+  Publish a dated API changelog with a feed, separate from product marketing updates, and label
+  each entry as breaking / additive / fixed.

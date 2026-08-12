@@ -1,0 +1,138 @@
+generated: '2026-08-12'
+method: searched
+source: https://registry.npmjs.org/-/v1/search?text=kixie
+
+name: Kixie client packages
+description: >-
+  Kixie publishes no first-party client SDK in any public package registry. Every public registry
+  that answers unauthenticated was queried on 2026-08-12 and none returned a Kixie-published
+  client library. The documented integration path is raw HTTP — the developer site shows curl
+  examples only, with no language bindings offered.
+
+package_count: 0
+official_sdk_count: 0
+
+registries_searched:
+- registry: npm
+  endpoint: https://registry.npmjs.org/-/v1/search?text=kixie
+  http_status: 200
+  results: 0
+  note: Zero packages match "kixie" at all, first-party or community.
+- registry: pypi
+  endpoint: https://pypi.org/pypi/kixie/json
+  http_status: 404
+  results: 0
+- registry: rubygems
+  endpoint: https://rubygems.org/api/v1/gems/kixie.json
+  http_status: 404
+  results: 0
+- registry: crates.io
+  endpoint: https://crates.io/api/v1/crates?q=kixie
+  http_status: 200
+  results: 0
+- registry: nuget
+  endpoint: https://azuresearch-usnc.nuget.org/query?q=kixie
+  http_status: 200
+  results: 0
+- registry: packagist
+  endpoint: https://packagist.org/search.json?q=kixie
+  http_status: 200
+  results: 0
+  note: Matches returned were unrelated packages (laravel-kiriengine, pixie).
+
+packages: []
+
+first_party_open_source:
+  github_org: https://github.com/Kixie-com
+  org_created: '2020-06-15'
+  public_repo_count: 2
+  finding: >-
+    Kixie maintains a public GitHub organisation, but neither repository is a client library for
+    the Kixie API, and neither is published to a package registry under Kixie's control.
+  repos:
+  - name: phone-number-to-timezone
+    url: https://github.com/Kixie-com/phone-number-to-timezone
+    language: JavaScript
+    description: Timezone/area lookup from a US or Canada area code or phone number.
+    is_api_client: false
+    last_push: '2023-09-20'
+    registry: null
+    version: null
+    published: null
+    note: >-
+      A general-purpose utility, not a Kixie API binding. The npm package of the same name
+      (phone-number-to-timezone@1.0.8, published 2022-07-29) is owned by `wcg_developer` and
+      points at github.com/wcg-developers, NOT at Kixie — so this repo is a copy or fork and
+      Kixie publishes nothing to npm under it.
+  - name: public-kixie-system-banner
+    url: https://github.com/Kixie-com/public-kixie-system-banner
+    language: TypeScript
+    description: Kixie's front-end system banner component.
+    is_api_client: false
+    last_push: '2026-01-06'
+    registry: null
+    version: null
+    published: null
+    note: >-
+      An internal front-end widget published publicly. Not distributed via npm and not a
+      consumable component for third parties.
+
+community_packages:
+  note: >-
+    Recorded for completeness; not first-party, not endorsed, and not credited to Kixie.
+  found:
+  - name: n8n-nodes-kixie
+    url: https://github.com/zulqi77/n8n-nodes-kixie
+    official: false
+    registry: null
+    version: null
+    published: null
+    last_push: '2025-08-31'
+    description: Community n8n node wrapping the Kixie API for SMS and call operations.
+    note: >-
+      Not present in the npm registry search results despite the n8n community-node convention of
+      npm publication, so no version metadata could be read.
+
+integration_surface_in_lieu_of_sdks:
+  note: >-
+    Kixie's answer to "no SDK" is low-code connectors rather than language bindings. These are
+    real and documented, but they are not client libraries and do not satisfy an engineer
+    building a service integration.
+  connectors:
+  - name: Zapier
+    url: https://support.kixie.com/hc/en-us/articles/33885592929947-Kixie-s-Zapier-Integration
+  - name: HubSpot Workflows
+    url: https://support.kixie.com/hc/en-us/articles/25736095892891-HubSpot-Workflows-How-to-Automate-Adding-Contacts-to-a-PowerList
+  - name: Zoho Workflows
+    url: https://support.kixie.com/hc/en-us/articles/23276281528475-Zoho-Workflows-How-to-Automate-Kixie-Actions-in-Zoho
+  - name: GoHighLevel Workflow Actions
+    url: https://support.kixie.com/hc/en-us/articles/33757346111131-Understanding-Kixie-s-HighLevel-Workflow-Actions
+
+collections:
+- type: postman
+  name: Kixie Public
+  url: https://www.postman.com/kixie-sales/kixie-public/
+  workspace_id: 9cd9b949-e578-493c-9f74-23085e01e43a
+  publisher: kixie-sales
+  publisher_type: team
+  publisher_verified: false
+  visibility: public
+  created: '2024-10-28'
+  updated: '2024-10-28'
+  collection_count: 1
+  http_status: 200
+  probed: '2026-08-12'
+  note: >-
+    A public Postman workspace under a `kixie-sales` team handle. Postman reports the publisher
+    as unverified, so first-party attribution is probable but not proven; it is recorded as a
+    published collection rather than as an official SDK. The workspace has not been touched since
+    the day it was created.
+
+finding: >-
+  No official SDK in any language. For an API whose operations place phone calls and send SMS —
+  where retry semantics, phone-number normalisation and webhook verification all have real
+  consequences — leaving every integrator to hand-roll an HTTP client against an undocumented
+  error surface is the single largest developer-experience gap in the Kixie surface.
+remedy: >-
+  Publish at minimum a JavaScript/TypeScript and a Python client to npm and PyPI, generated from
+  an OpenAPI description of the /app/event dispatch surface.

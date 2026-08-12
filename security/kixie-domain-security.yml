@@ -1,0 +1,77 @@
+generated: '2026-08-12'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.kixie.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 22 09:48:42 2026 GMT
+  hsts: false
+- host: developer.kixie.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 10 01:16:02 2026 GMT
+  hsts: false
+- host: apig.kixie.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Dec  8 23:59:59 2026 GMT
+  hsts: null
+domains:
+- domain: kixie.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: none
+
+findings:
+- id: no-hsts
+  severity: medium
+  applies_to:
+  - www.kixie.com
+  - developer.kixie.com
+  finding: >-
+    No Strict-Transport-Security header on the marketing site or the developer documentation host.
+    A first visit over http:// is downgradeable.
+  remedy: Send Strict-Transport-Security with a max-age of at least 31536000 and includeSubDomains.
+- id: hsts-unknown-on-gateway
+  severity: informational
+  applies_to:
+  - apig.kixie.com
+  finding: >-
+    HSTS could not be determined on the API gateway because it returns 403 to every
+    unauthenticated request, including the probe.
+- id: dmarc-p-none
+  severity: medium
+  applies_to:
+  - kixie.com
+  finding: >-
+    DMARC is published but the policy is p=none — monitoring only. Nothing is quarantined or
+    rejected, so a spoofed kixie.com sender still lands. For a vendor whose product is outbound
+    business communication and whose support flow runs on email (API-key activation, webhook
+    provisioning, and vulnerability reports all arrive by email), an unenforced DMARC policy is a
+    weaker posture than the product implies.
+  remedy: Move to p=quarantine and then p=reject once alignment reporting is clean.
+- id: no-caa
+  severity: low
+  applies_to:
+  - kixie.com
+  finding: >-
+    No CAA record, so any public CA may issue a certificate for kixie.com or its subdomains.
+  remedy: Publish CAA records naming the issuing CA(s), with an iodef contact.
+- id: no-dnssec
+  severity: low
+  applies_to:
+  - kixie.com
+  finding: DNSSEC is not enabled; DNS answers are not origin-authenticated.
+
+strengths:
+- TLS 1.3 negotiated on all three reachable hosts.
+- Valid, unexpired certificates on all three hosts at the 2026-08-12 probe.
+- SPF and DMARC records both present.
+
+related:
+  vulnerability_disclosure: security/kixie-vulnerability-disclosure.yml
+  trust_center: security/kixie-trust-center.yml
+  well_known: well-known/kixie-well-known.yml

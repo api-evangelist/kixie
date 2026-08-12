@@ -1,0 +1,162 @@
+generated: '2026-08-12'
+method: searched
+source: https://www.kixie.com/pricing/
+docs: https://www.kixie.com/pricing/
+
+name: Kixie plans and pricing
+description: >-
+  Kixie publishes three named subscription tiers plus three add-ons on its public pricing page,
+  but publishes no price for any of them. The page lists features and a 7-day free trial and
+  routes every tier to a trial or demo CTA. The only dollar figures Kixie publishes anywhere on
+  the page are usage rates, in the FAQ block — unlimited US/Canada minutes at $30/month per user,
+  SMS from $0.011 per message, and additional US/Canada DIDs at $5.00/month.
+
+plan_count: 3
+
+currency: USD
+billing_period: monthly
+pricing_published: false
+pricing_note: >-
+  As of the 2026-08-12 fetch, no per-seat subscription price appears on https://www.kixie.com/pricing/
+  in the served HTML — not hidden behind a monthly/annual toggle, simply absent. Each tier card
+  ends in "TRY FREE". A prospective integrator cannot cost a Kixie deployment from public
+  information, which is why this file records the tiers with `price: null` rather than omitting
+  them.
+
+free_trial:
+  available: true
+  length_days: 7
+  credit_card_required: false
+  evidence: '"7-day free trial - no credit card required"'
+
+plans:
+- id: professional
+  name: Professional Plan
+  price: null
+  price_published: false
+  currency: USD
+  billing_period: monthly
+  unit: per user
+  positioning: Perfect for individual sales professionals
+  included:
+  - Business Phone Service
+  - Bi-Directional CRM Integration
+  - Text Messaging
+  - Click-to-Call / Click-to-Text
+  - Team SMS
+  - SMS Templates
+  - Live Call Coaching
+  - Voicemail Drop
+  - IVR Auto-Attendant
+  - Ring Groups
+  - Call Queues
+  - Call Recording
+  - Rule Based Routing
+  - Unlimited Minutes (US/Canada)
+  - Developer API
+  powerdialer_lines: 0
+  api_access: true
+
+- id: single-line-powerdialer
+  name: Single-Line PowerDialer
+  price: null
+  price_published: false
+  currency: USD
+  billing_period: monthly
+  unit: per user
+  positioning: Professional features + 1-Line PowerDialer
+  included:
+  - Everything in Professional Plan
+  - Single-Line PowerDialer
+  - Calling Session Management
+  - Unlimited Minutes (US/Canada)
+  - Developer API
+  powerdialer_lines: 1
+  api_access: true
+
+- id: multi-line-powerdialer
+  name: Multi-Line PowerDialer
+  price: null
+  price_published: false
+  currency: USD
+  billing_period: monthly
+  unit: per user
+  positioning: Professional features + PowerDial up to 4 lines simultaneously
+  most_popular: true
+  included:
+  - Everything in Professional Plan
+  - PowerDialer up to 4 lines
+  - Calling Session Management
+  - AI Human Voice Detection (premium add-on)
+  - Unlimited Minutes (US/Canada)
+  - Developer API
+  powerdialer_lines: 4
+  api_access: true
+
+add_ons:
+- id: connectionboost
+  name: ConnectionBoost
+  type: premium
+  price: null
+  description: Connection-quality enhancement intended to reduce dropped and unanswered calls.
+- id: conversation-intelligence
+  name: Conversation Intelligence
+  type: premium
+  price: null
+  description: >-
+    AI call analysis producing summaries, sentiment and keyword/phrase tracking. This is the
+    feature that emits the `cisummary` webhook — see asyncapi/kixie-webhooks.yml.
+- id: dnc
+  name: DNC (Do Not Call)
+  type: compliance
+  price: null
+  description: Automated screening against Do Not Call registries for calls and SMS.
+
+usage_rates:
+- id: unlimited-minutes
+  name: Unlimited Minutes plan (US/Canada)
+  price: 30.00
+  currency: USD
+  period: monthly
+  unit: per user
+  evidence: >-
+    "We offer unlimited minutes plans for the US and Canada for $30/mo. per user. Otherwise,
+    minutes are billed according to current rates."
+- id: sms-10dlc
+  name: SMS (10DLC registered numbers, US/Canada)
+  price: 0.011
+  currency: USD
+  unit: per message
+  evidence: >-
+    "start at $0.011/text ($11 for every 1000 messages) for 10DLC registered numbers"
+- id: additional-did
+  name: Additional US/Canada phone number (DID)
+  price: 5.00
+  currency: USD
+  period: monthly
+  unit: per number
+  evidence: >-
+    "We give you your first US/Canada number (DID) for free, and then extra local US/Canada
+    numbers are just $5.00 per month."
+
+api_gating:
+  page_claim: >-
+    The pricing page's feature-comparison table shows "Developer API ✓" on all three tiers.
+  docs_claim: >-
+    Kixie's own API articles are stricter and inconsistent with the pricing table: the PowerList
+    API article requires "a paid Kixie account with at least one Professional tier agent", and
+    the Team SMS and Send to Queue articles state "You must be on the Professional Billing Tier
+    or higher to access this API."
+  activation_gate: >-
+    Beyond any plan gate, the key itself must be switched on by a human: "you may need to contact
+    Support via live chat in order for us to enable your API key." There is no self-service API
+    onboarding path.
+  finding: >-
+    An integrator cannot self-serve. Even on a paid plan, first API use requires a support
+    conversation, and no price is published to size the commitment.
+
+enterprise_contact_only: false
+sources:
+- https://www.kixie.com/pricing/
+- https://support.kixie.com/hc/en-us/articles/19135310564635-PowerList-API
+- https://support.kixie.com/hc/en-us/articles/19171653389339-Business-Team-SMS-API

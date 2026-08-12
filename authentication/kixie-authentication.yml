@@ -1,0 +1,128 @@
+generated: '2026-08-12'
+method: searched
+source: https://support.kixie.com/hc/en-us/articles/7273987300635-Kixie-Authentication-Overview
+docs: https://support.kixie.com/hc/en-us/articles/7273987300635-Kixie-Authentication-Overview
+
+name: Kixie authentication profile
+description: >-
+  Kixie authenticates every documented API surface with a single, long-lived, account-scoped API
+  key paired with a numeric Business ID. There is no OAuth 2.0 authorization server, no OpenID
+  Connect discovery document, no scope model, no per-user credential and no token exchange. The
+  key is issued once per Kixie account (not per user) and must be activated by Kixie Support
+  before first use.
+
+derived_from: docs
+note: >-
+  Derived from Kixie's published authentication overview and the request examples on
+  developer.kixie.com. Kixie publishes no OpenAPI, so there are no securitySchemes to parse —
+  this profile is read from the human documentation.
+
+schemes:
+- id: kixie-api-key-query
+  type: apiKey
+  in: query
+  name: apikey
+  description: >-
+    The account API key, passed as a query-string parameter on the request URL. Used by the Event
+    API (POST https://apig.kixie.com/app/event?apikey=...) and the legacy queue endpoints.
+  required: true
+  applies_to:
+  - Kixie Event API
+  - Kixie Webhook Management API
+  evidence: https://developer.kixie.com/make-a-call/
+
+- id: kixie-api-key-body
+  type: apiKey
+  in: body
+  name: apikey
+  description: >-
+    The same account API key, repeated inside the JSON request body. Kixie's PowerList API
+    documentation states this explicitly — "Your API key is already in the endpoint URL, but must
+    be in the API body as well" — so both placements are required together, not alternatives.
+  required: true
+  applies_to:
+  - Kixie Event API
+  - Kixie Webhook Management API
+  evidence: https://support.kixie.com/hc/en-us/articles/19135310564635-PowerList-API
+
+- id: kixie-api-key-query-camel
+  type: apiKey
+  in: query
+  name: apiKey
+  description: >-
+    The Agent Status API uses a camel-cased `apiKey` query parameter rather than the lower-cased
+    `apikey` every other endpoint uses. This inconsistency is in Kixie's own documentation and is
+    a real integration hazard, not a transcription error on our part.
+  required: true
+  applies_to:
+  - Kixie Agent Status API
+  evidence: https://support.kixie.com/hc/en-us/articles/360020051474-Kixie-Agent-Status-API
+
+- id: kixie-business-id
+  type: tenantIdentifier
+  in: body
+  name: businessid
+  description: >-
+    The numeric Kixie Business ID that scopes the request to an account. Not a secret in the
+    cryptographic sense, but required alongside the API key on every Event API and Webhook
+    Management call; requests without it are not account-resolvable.
+  required: true
+  applies_to:
+  - Kixie Event API
+  - Kixie Webhook Management API
+  evidence: https://support.kixie.com/hc/en-us/articles/7273987300635-Kixie-Authentication-Overview
+
+credential_issuance:
+  self_service: false
+  path: Kixie Dashboard > Manage > Account Settings > Integrations
+  requires_role: Admin
+  requires_activation: true
+  activation_note: >-
+    Kixie states the API key must be activated by Support before an integration will work —
+    "you may need to contact Support via live chat in order for us to enable your API key."
+  plan_gate: >-
+    Kixie's PowerList API documentation requires "a paid Kixie account with at least one
+    Professional tier agent"; the Team SMS and Send to Queue articles state the Professional
+    Billing Tier or higher.
+
+granularity:
+  scope: account
+  per_user_credentials: false
+  key_count_per_account: 1
+  note: >-
+    "Each key and BID is specific to a Kixie account, not an individual user, and only one key
+    and BID are assigned to an account." One credential per tenant means no per-integration
+    revocation and no least-privilege split between an automation and a human operator.
+
+gaps:
+- id: key-in-query-string
+  severity: high
+  finding: >-
+    The API key travels in the request URL query string on every documented endpoint. Query
+    strings are routinely written to proxy, gateway, CDN and browser-history logs, so the
+    credential has a materially larger exposure surface than a header-borne one.
+  remedy: Accept the key in an Authorization or X-API-Key request header.
+- id: no-scopes
+  severity: medium
+  finding: >-
+    A single account key authorizes every operation — placing calls, sending SMS to customers,
+    and mutating PowerLists — with no scope, role or capability restriction.
+  remedy: Introduce scoped keys, or an OAuth 2.0 client-credentials flow with scopes.
+- id: no-rotation-policy
+  severity: medium
+  finding: No published key-rotation, expiry, or multi-key policy; one key per account.
+  remedy: Support multiple concurrent named keys so a key can be rotated without downtime.
+- id: parameter-name-inconsistency
+  severity: low
+  finding: >-
+    `apikey` on the Event and Webhook Management APIs, `apiKey` on the Agent Status API.
+  remedy: Accept both casings, or normalise to one and document the alias.
+- id: no-openid-connect
+  severity: informational
+  finding: >-
+    No /.well-known/openid-configuration or /.well-known/oauth-authorization-server is served on
+    any Kixie host (probed 2026-08-12 — see well-known/kixie-well-known.yml).
+
+transport:
+  tls_required: true
+  documented_content_type: application/json

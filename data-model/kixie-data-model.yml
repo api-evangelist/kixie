@@ -1,0 +1,491 @@
+generated: '2026-08-12'
+method: derived
+source: >-
+  developer.kixie.com webhook payload examples and request bodies; support.kixie.com PowerList,
+  Team SMS, Send to Queue and Agent Status articles
+
+name: Kixie data model
+description: >-
+  Entity/relationship graph for the Kixie platform, derived from the JSON payloads Kixie
+  publishes. Kixie ships no OpenAPI and therefore no components.schemas, so this graph is
+  reconstructed from documented webhook payloads and request bodies rather than from $ref links.
+  Field names and types below are taken verbatim from Kixie's own examples; where a type is
+  ambiguous in the examples, that ambiguity is recorded rather than resolved.
+
+derivation_note: >-
+  Confidence is field-level. An entity is `high` when it appears as a named object in a published
+  payload with a stable key set; `medium` when it is only ever referenced by a bare id field. No
+  entity here is inferred from the product marketing.
+
+identifier_conventions:
+  finding: >-
+    Kixie uses at least four unrelated identifier schemes and applies them inconsistently, and the
+    same logical key appears under different names in different payloads. This is the dominant
+    integration hazard in the data model.
+  schemes:
+  - kind: uuid
+    used_by: callid, externalid, messageid
+    example_shape: 8-4-4-4-12 hex
+  - kind: numeric-string
+    used_by: businessid, userid, powerlistId, cadenceid, contactid, dealid, queue id
+  - kind: e164-phone
+    used_by: target, tonumber164, fromnumber164
+    note: The de-facto primary key for a PowerList contact.
+  - kind: email
+    used_by: email (agent identity on the Event API)
+    note: >-
+      The Event API addresses an agent by email address, not by user id — so an agent's identity
+      key on the request path differs from the `userid` returned in webhook payloads.
+  inconsistencies:
+  - >-
+      `callid` is a UUID in most webhook payloads but a numeric string in the Disposition and
+      Scheduled Activity payloads (e.g. "callid": "368131317"), where the UUID moves to
+      `externalid`. A consumer joining on `callid` across event types will not match.
+  - >-
+      Casing drifts between and within payloads: `powerlistId` (request bodies) vs `powerlistid`
+      (webhook payloads) vs `powerlistSessionId` vs `powerlistsessionid`.
+  - >-
+      `crmContactId` (request body) vs `contactid` (webhook payload) vs `externalcrmid` refer to
+      overlapping CRM linkage concepts with no published mapping.
+  - >-
+      Booleans arrive as integers (0/1) inside `result` on the Agent Status API and as real
+      booleans elsewhere.
+  - >-
+      `businessid` is a quoted string in some payloads and an unquoted number in others.
+
+entities:
+- name: Business
+  key: businessid
+  confidence: high
+  description: >-
+    The Kixie tenant. Scopes every credential, every PowerList, every queue and every webhook.
+    One API key per Business.
+  fields:
+  - businessid
+  - businessnumber
+  relationships:
+  - has_many: User
+    via: businessid
+  - has_many: PowerList
+    via: businessid
+  - has_many: Webhook
+    via: businessid
+  - has_many: Call
+    via: businessid
+  - has_many: PhoneNumber
+    via: businessid
+
+- name: User
+  aliases: [Agent]
+  key: userid
+  alternate_key: email
+  confidence: high
+  description: >-
+    A Kixie seat. Addressed by `email` on every Event API request and by `userid` in webhook
+    payloads.
+  fields:
+  - userid
+  - email
+  - calleridName
+  - device
+  - onCall
+  - registered
+  relationships:
+  - belongs_to: Business
+    via: businessid
+  - has_many: Call
+    via: callmadeby
+  - has_many: Disposition
+    via: userid
+
+- name: Call
+  key: callid
+  alternate_key: externalid
+  confidence: high
+  description: >-
+    The central entity. Every call-bearing webhook nests the full record under
+    `data.callDetails`; the record is emitted repeatedly across the call's lifecycle (start,
+    answered, end, voicemail) with progressively more fields populated.
+  fields:
+  - callid
+  - externalid
+  - businessid
+  - calldate
+  - answerDate
+  - callEndDate
+  - fromnumber
+  - tonumber
+  - fromnumber164
+  - tonumber164
+  - customerNumber
+  - businessNumber
+  - duration
+  - amount
+  - calltype
+  - callstatus
+  - disposition
+  - recordingurl
+  - recordingsid
+  - recordingduration
+  - calleridName
+  - fname
+  - lname
+  - email
+  - destinationName
+  - source
+  - extensionDial
+  - toExt
+  - fromExt
+  - transcriptionXd
+  - transcriptionStatus
+  - transcriptionS3Key
+  - crmlink
+  - contactid
+  - dealid
+  - externalcrmid
+  - powerlistid
+  - powerlistsessionid
+  - cadenceactionprocessid
+  - HScalltype
+  enums_observed:
+    calltype: [incoming, outgoing]
+    callstatus: [answered, missed]
+    source: [MANUAL-DIAL]
+    destinationName: [PowerList, Direct Dial]
+  relationships:
+  - belongs_to: Business
+    via: businessid
+  - belongs_to: User
+    via: callmadeby
+  - has_one: Recording
+    via: recordingurl
+  - has_one: Disposition
+    via: callid
+  - has_one: ConversationIntelligenceSummary
+    via: externalid
+  - has_many: ScheduledActivity
+    via: callid
+  - belongs_to: PowerListSession
+    via: powerlistsessionid
+  - references: Contact
+    via: contactid
+
+- name: Recording
+  key: recordingurl
+  confidence: high
+  description: >-
+    An MP3 of the call, served from calls.kixie.com and named by the call UUID.
+  fields:
+  - recordingurl
+  - recordingsid
+  - recordingduration
+  url_pattern: https://calls.kixie.com/{callid}.mp3
+  note: >-
+    The URL is deterministic from the call UUID. Kixie publishes no statement about whether the
+    recording endpoint requires authentication or how long recordings are retained — a material
+    gap for a payload that Kixie posts to unauthenticated customer webhook endpoints.
+  relationships:
+  - belongs_to: Call
+    via: callid
+
+- name: Disposition
+  key: externalid
+  confidence: high
+  description: >-
+    An agent-supplied call outcome. Emitted as its own webhook and also denormalised onto the
+    Call record.
+  fields:
+  - disposition
+  - purpose
+  - dispositionExternalid
+  - purposeExternalid
+  - subject
+  - note
+  - callType
+  - userid
+  - phone
+  - timezone
+  enums_observed:
+    disposition: ['Connected Call', 'Note', 'not disposed', 'inbound VM-msg left']
+  relationships:
+  - belongs_to: Call
+    via: callid
+  - belongs_to: User
+    via: userid
+  - belongs_to: PowerList
+    via: powerlistId
+
+- name: ConversationIntelligenceSummary
+  key: externalid
+  confidence: high
+  requires_addon: Conversation Intelligence
+  description: >-
+    AI-generated analysis emitted after a call ends. The richest derived object Kixie produces
+    and the one with the most sensitive content.
+  fields:
+  - summary
+  - sentimentRank
+  - conversationStrength
+  - agentMonologue
+  - customerStory
+  - patience
+  - keywords
+  - phrases
+  enums_observed:
+    sentimentRank: [positive]
+  field_types:
+    conversationStrength: integer
+    keywords: map<string, boolean>
+    phrases: map<string, boolean>
+    agentMonologue: duration string (MM:SS)
+  relationships:
+  - belongs_to: Call
+    via: externalid
+
+- name: ScheduledActivity
+  key: externalid
+  confidence: high
+  description: A future task or callback scheduled by an agent from within a call.
+  fields:
+  - subject
+  - description
+  - type
+  - typename
+  - duration
+  - date
+  - dateformat
+  - time
+  - timeformat
+  - timezone
+  enums_observed:
+    type: [Call]
+  note: >-
+    Dates and times are transported twice in two formats each — a human string ("13 Mar, 2024",
+    "4:44 pm") and an ISO-ish one ("2024-03-13", "16:44") — with an IANA timezone in a third
+    field. No single RFC 3339 timestamp is provided.
+  relationships:
+  - belongs_to: Call
+    via: callid
+  - belongs_to: User
+    via: userid
+  - references: Contact
+    via: contactid
+
+- name: Message
+  aliases: [SMS]
+  key: messageid
+  confidence: high
+  description: An SMS or MMS sent or received on a Kixie number.
+  fields:
+  - messageid
+  - from
+  - to
+  - customernumber
+  - businessnumber
+  - direction
+  - message
+  - messageDate
+  - email
+  enums_observed:
+    direction: [incoming, outgoing]
+  relationships:
+  - belongs_to: Business
+    via: businessid
+  - has_one: Contact
+    via: contact
+
+- name: TeamSMS
+  key: id
+  confidence: medium
+  description: >-
+    A shared team messaging identity backed by one or more phone numbers. Addressed by a numeric
+    id found in the dashboard under Manage > Numbers > Team SMS.
+  fields:
+  - id
+  - fromNumber
+  relationships:
+  - belongs_to: Business
+    via: businessid
+  - has_many: PhoneNumber
+    via: fromNumber
+  - has_many: Message
+
+- name: Contact
+  key: contact_id
+  alternate_key: phone_number
+  confidence: high
+  description: >-
+    A person. Kixie holds two different contact shapes: the snake_case shape it EXPECTS from a
+    customer-operated Contact Lookup endpoint, and the camelCase shape it EMITS inside SMS
+    webhook payloads. They are not the same schema.
+  shapes:
+  - context: contact-lookup (Kixie consumes, customer implements)
+    casing: snake_case
+    fields: [first_name, last_name, url, contact_id, email, phone_number, town, postal, state, address]
+  - context: sms webhook (Kixie emits)
+    casing: camelCase
+    fields: [firstName, lastName, name, phone, email, id, link, street, city, state, zip]
+  finding: >-
+    `town` vs `city`, `postal` vs `zip`, `url` vs `link`, `contact_id` vs `id` — the same nine
+    concepts under two naming conventions in one product. An integrator must maintain two mappers.
+  relationships:
+  - has_one: Deal
+    via: deal_id
+  - has_one: Organization
+    via: org
+  - has_many: Call
+    via: contactid
+
+- name: Deal
+  key: deal_id
+  confidence: medium
+  description: An opportunity in the customer's CRM, surfaced in the dialer via Contact Lookup.
+  fields: [title, value, status, stage, deal_id, url]
+  optional: true
+  relationships:
+  - belongs_to: Contact
+
+- name: Organization
+  key: name
+  confidence: low
+  description: The account a contact belongs to. Only ever published as a single `name` field.
+  fields: [name]
+  optional: true
+  relationships:
+  - belongs_to: Contact
+
+- name: PowerList
+  key: powerlistId
+  confidence: high
+  description: >-
+    A dialing list. Contacts are keyed on the target phone number, not on a contact id — Kixie
+    states explicitly that one lead with two numbers is two PowerList contacts.
+  fields:
+  - powerlistId
+  - target
+  - firstName
+  - lastName
+  - title
+  - companyName
+  - email
+  - nextCallRefresher
+  - crmUserId
+  - crmContactId
+  - duplicateHandling
+  - extraData
+  natural_key: target (E.164 phone number)
+  write_semantics:
+    duplicateHandling:
+      overwrite: Replaces all fields; omitted fields overwrite existing values with null.
+      merge: Replaces only fields present in the request; omitted fields are preserved.
+      ignore: Leaves an existing contact untouched; only new contacts are added.
+    note: >-
+      `overwrite` is destructive by omission — a partial update silently erases fields the caller
+      did not send. This is the single most dangerous parameter in the Kixie API.
+  extension_point:
+    field: extraData
+    type: map<string, string>
+    note: Keys become PowerList column names. Untyped, unschematised, no documented limits.
+  relationships:
+  - belongs_to: Business
+    via: businessid
+  - has_many: PowerListContact
+    via: powerlistId
+  - has_many: PowerListSession
+    via: powerlistId
+
+- name: PowerListSession
+  key: powerlistSessionId
+  confidence: high
+  description: One agent's dialing run through a PowerList.
+  fields:
+  - powerlistSessionId
+  - powerlistContactStatus
+  - lastDialOutcome
+  - agentEmail
+  - ownerUserId
+  - externalOwnerId
+  enums_observed:
+    powerlistContactStatus: [rescheduling]
+    lastDialOutcome: ['Lost Race']
+  relationships:
+  - belongs_to: PowerList
+    via: powerlistId
+  - belongs_to: User
+    via: agentEmail
+  - has_many: Call
+    via: powerlistsessionid
+
+- name: Queue
+  key: id
+  confidence: medium
+  description: >-
+    An inbound call queue, addressed by a numeric id from the dashboard under Manage > Inbound >
+    Queues. Supports send, remove, and a legacy flush-all operation.
+  operations:
+  - eventname: queue
+  - eventname: queue + action=remove
+  - legacy_call: flushUserQueue
+  relationships:
+  - belongs_to: Business
+    via: businessid
+
+- name: Cadence
+  key: cadenceid
+  confidence: medium
+  description: >-
+    A multi-step automated outreach sequence. Contacts can be added to and removed from a cadence
+    via the Event API; the resulting call carries a `cadenceactionprocessid`.
+  fields:
+  - cadenceid
+  - cadenceactionprocessid
+  docs: https://support.kixie.com/hc/en-us/articles/1260803683709-Creating-an-Automation-Cadence
+  relationships:
+  - belongs_to: Business
+    via: businessid
+  - has_many: Call
+    via: cadenceactionprocessid
+
+- name: Webhook
+  key: webhookid
+  confidence: high
+  description: A registered HTTP callback for one event type, with optional filters and headers.
+  fields:
+  - webhookid
+  - name
+  - location
+  - eventname
+  - direction
+  - callresult
+  - disposition
+  - headers
+  - runtime
+  relationships:
+  - belongs_to: Business
+    via: businessid
+
+- name: PhoneNumber
+  aliases: [DID]
+  key: e164
+  confidence: medium
+  description: >-
+    A provisioned Kixie number. First US/Canada DID free, additional numbers $5.00/month;
+    transfers supported.
+  relationships:
+  - belongs_to: Business
+    via: businessid
+
+render: null
+render_note: >-
+  No subway/ diagram exists in this repo. This file is the authoritative entity graph; a render
+  can be generated from it.
+
+gaps:
+- No published schema for any entity — no OpenAPI components, no JSON Schema, no TypeScript types.
+- No documented field-level types; types above are inferred from example values.
+- No documented enum for disposition, callstatus, destinationName or lastDialOutcome — the values
+  recorded here are only those that happen to appear in published examples and are certainly
+  incomplete.
+- No documented retention policy for calls, recordings or transcriptions.
+- No read API for any entity. Every documented operation is a write or a webhook; there is no way
+  to list PowerLists, fetch a call record, or read a contact back out of Kixie over HTTP.

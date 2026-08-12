@@ -1,0 +1,73 @@
+generated: '2026-08-12'
+method: searched
+source: https://support.kixie.com/hc/en-us/articles/19135310564635-PowerList-API
+docs: https://support.kixie.com/hc/en-us/articles/19135310564635-PowerList-API
+
+name: Kixie API rate limits
+description: >-
+  Kixie publishes exactly one rate limit, in prose, inside the PowerList API help-center article:
+  a default daily usage quota of 10,000 API calls per account, resetting at 00:00 UTC. No
+  per-second or per-minute burst limit is published, no rate-limit response headers are
+  documented, and no exhaustion status code is stated.
+
+limit_count: 1
+
+limits:
+- id: daily-account-quota
+  scope: per-account
+  window: 1 day
+  window_reset: '00:00 UTC'
+  limit: 10000
+  unit: requests
+  burst: null
+  applies_to:
+  - Kixie Event API
+  - Kixie Webhook Management API
+  - Kixie Agent Status API
+  default: true
+  adjustable: unknown
+  evidence: >-
+    "Your default daily usage limit is 10,000 API calls per day. (Each day resets at UTC 00:00.)"
+  source: https://support.kixie.com/hc/en-us/articles/19135310564635-PowerList-API
+  note: >-
+    The word "default" implies the ceiling can be raised, but Kixie documents no request path,
+    tier mapping, or contact route for raising it.
+
+response_headers:
+  documented: false
+  standard_ratelimit_headers: false
+  legacy_x_headers: false
+  retry_after: false
+  finding: >-
+    Kixie documents no RateLimit-Limit / RateLimit-Remaining / RateLimit-Reset headers (RFC 9239
+    style), no X-RateLimit-* headers, and no Retry-After. This is the more consequential gap than
+    the quota number itself: an agent or automation has no runtime signal at all. It cannot read
+    how much of the 10,000-call daily budget remains, cannot back off before exhaustion, and
+    cannot learn when the window reopens except by inferring 00:00 UTC from a help-center article.
+    The only way to discover the limit has been hit is to hit it.
+  remedy: >-
+    Emit RateLimit-Limit, RateLimit-Remaining and RateLimit-Reset on every response, and
+    Retry-After with 429 on exhaustion.
+
+exhaustion:
+  status_code: undocumented
+  body: undocumented
+  finding: >-
+    Kixie does not state what an over-quota request returns — whether 429, 403, a 200 with a
+    failure body, or a silent drop. For an API whose operations place calls and send SMS, a
+    silent or ambiguous failure mode is materially worse than a clear 429.
+
+per_endpoint_limits: none documented
+per_key_limits: >-
+  Not separable — Kixie issues exactly one API key per account, so the per-account quota is
+  necessarily also the per-key quota. See authentication/kixie-authentication.yml.
+
+adjacent_throughput_constraints:
+  note: >-
+    Distinct from API rate limiting, but the constraint an integrator actually meets first:
+    telephony throughput is governed by carrier and 10DLC registration limits on SMS and by
+    licensed line count on the PowerDialer (1 line on Single-Line, up to 4 on Multi-Line). Kixie
+    documents these separately as messaging and dialing guidance, not as API limits.
+  references:
+  - https://support.kixie.com/hc/en-us/articles/16188947660571-10DLC-Registration-Recommendations
+  - https://support.kixie.com/hc/en-us/articles/360040209593-SMS-Best-Practices-Maximizing-SMS-Delivery-Rates-Minimizing-Carrier-Blocking

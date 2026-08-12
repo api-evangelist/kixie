@@ -42,5 +42,51 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Kixie PowerCall is a company surfaced via the API Evangelist harvest backlog (source: marketing-integration-graph) and added to the network as a stub for full-pipeline profiling.
-- https://kixie.ai/
+Kixie is a Los Angeles based sales-engagement and revenue-communications platform built around
+PowerCall — a multi-line power dialer, business phone service and SMS/MMS product with
+bi-directional CRM integrations. Its public API is a small, event-oriented HTTP surface on the
+`apig.kixie.com` gateway.
+
+- Website: https://www.kixie.com/
+- Developer portal: https://developer.kixie.com/
+- Status: https://status.kixie.com/
+
+## What Kixie publishes
+
+| Surface | Base | Notes |
+|---|---|---|
+| Kixie Event API | `https://apig.kixie.com/app/event` | One POST endpoint dispatching on an `eventname` string — calls, SMS, Team SMS, queues, cadences, PowerLists |
+| Kixie Webhook Management API | `https://apig.kixie.com/app/v1/api` | Create / update / list / delete the eight documented event webhooks |
+| Kixie Agent Status API | `https://apig.kixie.com/www/agent/status` | The only read-only operation in the public surface |
+
+Nine webhook event types are documented with full payload examples, plus four inbound "Custom CRM"
+callbacks that Kixie invokes against customer-operated endpoints.
+
+## Not published by Kixie
+
+Recorded so that absence reads as deliberate rather than as something we failed to find. Every item
+below was probed on 2026-08-12; see `well-known/kixie-well-known.yml` for URLs and status codes.
+
+- **No machine-readable contract** — no OpenAPI, Swagger, AsyncAPI, GraphQL SDL or JSON Schema on
+  any host. The reference is server-rendered HTML.
+- **No client SDKs** — npm, PyPI, RubyGems, NuGet, crates.io and Packagist all return zero
+  first-party packages. Neither repo in the `Kixie-com` GitHub org is an API client.
+- **No CLI, no MCP server, no A2A agent card, no `/.well-known/` documents of any kind.**
+- **No idempotency support** on operations that place calls and send SMS.
+- **No error catalogue** and no documented rate-limit response headers (the 10,000/day account
+  quota is published in prose, in one help-center article).
+- **No deprecation policy, no SLA, no public roadmap**, and no published prices for any of the
+  three subscription tiers.
+- **No compliance certifications** — and Kixie says so on purpose: its security page
+  "intentionally does not claim a certification, audit result, hosting architecture, retention
+  period, or control that has not been confirmed for publication."
+
+Kixie does run a public Atlassian Statuspage with an open JSON API that tracks named API endpoints
+as individual components, and publishes a security contact with reporting instructions at
+https://www.kixie.com/security/.
+
+> **Note on probing this domain.** `www.kixie.com` and `developer.kixie.com` run WordPress with
+> fuzzy-match URL redirection: unknown paths return `301` to a loosely-similar marketing page
+> rather than `404`. `/.well-known/agent-card.json` redirects to `/integrations/agentforce-marketing/`
+> and `/roadmap/` redirects to `/integrations/monday/`. A crawler that follows redirects and records
+> the final `200` will falsely credit Kixie with documents it does not serve. Verify the body.
