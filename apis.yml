@@ -30,6 +30,19 @@ tags:
 - Contact Center
 - Power Dialer
 - CRM
+- Webhook
+- Communications
+- Revenue Operations
+tags_raw:
+- Company
+- Sales Engagement
+- Voice
+- Telephony
+- SMS
+- Messaging
+- Contact Center
+- Power Dialer
+- CRM
 - Webhooks
 - Communications
 - Revenue Operations
@@ -75,6 +88,10 @@ apis:
   humanURL: https://support.kixie.com/hc/en-us/articles/20871662051739-Managing-Kixie-Event-Webhooks-via-API
   baseURL: https://apig.kixie.com/app/v1/api
   tags:
+  - Webhook
+  - Event
+  - Management
+  tags_raw:
   - Webhooks
   - Events
   - Management
