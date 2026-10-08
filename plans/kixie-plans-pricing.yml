@@ -160,3 +160,31 @@ sources:
 - https://www.kixie.com/pricing/
 - https://support.kixie.com/hc/en-us/articles/19135310564635-PowerList-API
 - https://support.kixie.com/hc/en-us/articles/19171653389339-Business-Team-SMS-API
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models: []
+  units:
+  - seat
+  plans:
+  - name: Professional Plan
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - seat
+    periods: []
+  - name: Single-Line PowerDialer
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - seat
+    periods: []
+  - name: Multi-Line PowerDialer
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - seat
+    periods: []
