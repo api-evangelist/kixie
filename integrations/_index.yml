@@ -223,7 +223,6 @@
   arazzo: null
 - slug: kixie-monday-com
   label: monday.com
-  partner: monday-com
   partner_name: monday.com
   category: Project Management
   type: marketplace
@@ -353,7 +352,6 @@
   arazzo: null
 - slug: kixie-microsoft-excel
   label: Microsoft Excel
-  partner: microsoft-excel
   partner_name: Microsoft Excel
   category: Microsoft
   type: marketplace
@@ -395,5 +393,30 @@
   channel: ipaas-usage
   evidence: https://zapier.com/apps/kixie/integrations/vanillasoft
   source: edge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-zapier
+  label: Zapier
+  partner: zapier
+  partner_name: Zapier
+  type: marketplace
+  marketplace: zapier-directory
+  channel: ipaas-listing
+  evidence: https://zapier.com/apps/kixie/integrations
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: Zapier app directory (zapier.com/api/v4/apps)
+    spec_file: null
+    role: ipaas-connector:zapier
+    registered_name: Kixie
+    matched_domain: kixie.com
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    app_slug: kixie
+    beta: false
+    builder: unknown (not in the directory record)
   status: pending-partner-spec
   arazzo: null
