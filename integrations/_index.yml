@@ -15,6 +15,7 @@
   evidence: https://zapier.com/apps/kixie/integrations/pipedrive/218428/send-kixie-sms-messages-make-calls-when-new-pipedrive-deals-are-created
   template: https://zapier.com/apps/kixie/integrations/pipedrive/218428/send-kixie-sms-messages-make-calls-when-new-pipedrive-deals-are-created
   source: template
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: kixie-update-streak-contacts-and-add-them-to-kixie-powerlists
@@ -29,11 +30,12 @@
   evidence: https://zapier.com/apps/kixie/integrations/streak/1473563/update-streak-contacts-and-add-them-to-kixie-powerlists
   template: https://zapier.com/apps/kixie/integrations/streak/1473563/update-streak-contacts-and-add-them-to-kixie-powerlists
   source: template
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: kixie-add-new-apollo-contacts-to-kixie-powerlists-effortlessly
   label: Add new Apollo contacts to Kixie powerlists effortlessly
-  partner: apollo
+  partner: apollo-io
   partner_name: Apollo
   category: Sales & CRM
   use_case: Add new Apollo contacts to Kixie powerlists effortlessly
@@ -43,6 +45,7 @@
   evidence: https://zapier.com/apps/apollo/integrations/kixie/255644429/add-new-apollo-contacts-to-kixie-powerlists-effortlessly
   template: https://zapier.com/apps/apollo/integrations/kixie/255644429/add-new-apollo-contacts-to-kixie-powerlists-effortlessly
   source: template
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: kixie-send-texts-via-kixie-when-prospects-click-activecampaign-email-links
@@ -57,6 +60,7 @@
   evidence: https://zapier.com/apps/activecampaign/integrations/kixie/218266/send-texts-via-kixie-when-prospects-click-activecampaign-email-links
   template: https://zapier.com/apps/activecampaign/integrations/kixie/218266/send-texts-via-kixie-when-prospects-click-activecampaign-email-links
   source: template
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: kixie-send-kixie-sms-messages-before-google-calendar-events-start
@@ -71,6 +75,7 @@
   evidence: https://zapier.com/apps/google-calendar/integrations/kixie/220582/send-kixie-sms-messages-before-google-calendar-events-start
   template: https://zapier.com/apps/google-calendar/integrations/kixie/220582/send-kixie-sms-messages-before-google-calendar-events-start
   source: template
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: kixie-send-texts-via-kixie-to-pipedrive-contacts-for-new-stripe-events
@@ -85,6 +90,7 @@
   evidence: https://zapier.com/apps/kixie/integrations/stripe/224925/send-texts-via-kixie-to-pipedrive-contacts-for-new-stripe-events
   template: https://zapier.com/apps/kixie/integrations/stripe/224925/send-texts-via-kixie-to-pipedrive-contacts-for-new-stripe-events
   source: template
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: kixie-send-a-kixie-sms-messages-when-deals-enter-pipedrive-pipeline-stages
@@ -99,6 +105,7 @@
   evidence: https://zapier.com/apps/kixie/integrations/pipedrive/224959/send-a-kixie-sms-messages-when-deals-enter-pipedrive-pipeline-stages
   template: https://zapier.com/apps/kixie/integrations/pipedrive/224959/send-a-kixie-sms-messages-when-deals-enter-pipedrive-pipeline-stages
   source: template
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: kixie-send-text-messages-in-kixie-for-new-abandoned-carts-in-shopify
@@ -113,286 +120,7 @@
   evidence: https://zapier.com/apps/kixie/integrations/shopify/613748/send-text-messages-in-kixie-for-new-abandoned-carts-in-shopify
   template: https://zapier.com/apps/kixie/integrations/shopify/613748/send-text-messages-in-kixie-for-new-abandoned-carts-in-shopify
   source: template
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-leadconnector
-  label: LeadConnector
-  partner_name: LeadConnector
-  category: Marketing Automation
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/leadconnector
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-google-sheets
-  label: Google Sheets
-  partner: google-sheets
-  partner_name: Google Sheets
-  category: Google
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/google-sheets
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-acuity-scheduling
-  label: Acuity Scheduling
-  partner: acuity-scheduling
-  partner_name: Acuity Scheduling
-  category: Scheduling & Booking
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/acuity-scheduling
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-close
-  label: Close
-  partner: close
-  partner_name: Close
-  category: CRM (Customer Relationship Management)
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/close
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-leadboxer
-  label: LeadBoxer
-  partner_name: LeadBoxer
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/leadboxer
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-callrail
-  label: CallRail
-  partner: callrail
-  partner_name: CallRail
-  category: Call Tracking
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/callrail
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-clickfunnels-classic
-  label: ClickFunnels Classic
-  partner: clickfunnels
-  partner_name: ClickFunnels Classic
-  category: Marketing Automation
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/clickfunnels-classic
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-follow-up-boss
-  label: Follow Up Boss
-  partner: follow-up-boss
-  partner_name: Follow Up Boss
-  category: CRM (Customer Relationship Management)
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/follow-up-boss
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-instantly
-  label: Instantly
-  partner: instantly-ai
-  partner_name: Instantly
-  category: Email
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/instantly
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-monday-com
-  label: monday.com
-  partner_name: monday.com
-  category: Project Management
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/monday
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-clickup
-  label: ClickUp
-  partner: clickup
-  partner_name: ClickUp
-  category: Project Management
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/clickup
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-oncehub
-  label: OnceHub
-  partner_name: OnceHub
-  category: Scheduling & Booking
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/oncehub
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-keap
-  label: Keap
-  partner: keap
-  partner_name: Keap
-  category: CRM (Customer Relationship Management)
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/keap
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-typeform
-  label: Typeform
-  partner: typeform
-  partner_name: Typeform
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/typeform
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-facebook-lead-ads-for-business-admins
-  label: Facebook Lead Ads (for Business admins)
-  partner_name: Facebook Lead Ads (for Business admins)
-  category: Ads & Conversion
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/facebook-lead-ads-beta
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-gravity-forms
-  label: Gravity Forms
-  partner: gravity-forms
-  partner_name: Gravity Forms
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/gravity-forms
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-webinarjam-everwebinar
-  label: WebinarJam / EverWebinar
-  partner: webinarjam
-  partner_name: WebinarJam / EverWebinar
-  category: Webinars
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/webinarjam
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-facebook-lead-ads
-  label: Facebook Lead Ads
-  partner: facebook-lead-ads
-  partner_name: Facebook Lead Ads
-  category: Ads & Conversion
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/facebook-lead-ads
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-google-forms
-  label: Google Forms
-  partner: google-forms
-  partner_name: Google Forms
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/google-forms
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-calendly
-  label: Calendly
-  partner: calendly
-  partner_name: Calendly
-  category: Scheduling & Booking
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/calendly
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-microsoft-excel
-  label: Microsoft Excel
-  partner_name: Microsoft Excel
-  category: Microsoft
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/excel
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-jotform
-  label: Jotform
-  partner: jotform
-  partner_name: Jotform
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/jotform
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-bonzo
-  label: BONZO
-  partner_name: BONZO
-  category: CRM (Customer Relationship Management)
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/bonzo
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: kixie-vanillasoft
-  label: VanillaSoft
-  partner_name: VanillaSoft
-  category: CRM (Customer Relationship Management)
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/kixie/integrations/vanillasoft
-  source: edge
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: kixie-zapier
@@ -419,4 +147,310 @@
     beta: false
     builder: unknown (not in the directory record)
   status: not-a-workflow
+  arazzo: null
+- slug: kixie-leadconnector
+  label: LeadConnector
+  partner_name: LeadConnector
+  category: Marketing Automation
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/leadconnector
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-google-sheets
+  label: Google Sheets
+  partner: google-sheets
+  partner_name: Google Sheets
+  category: Google
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/google-sheets
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-acuity-scheduling
+  label: Acuity Scheduling
+  partner: acuity-scheduling
+  partner_name: Acuity Scheduling
+  category: Scheduling & Booking
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/acuity-scheduling
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-close
+  label: Close
+  partner: close
+  partner_name: Close
+  category: CRM (Customer Relationship Management)
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/close
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-leadboxer
+  label: LeadBoxer
+  partner_name: LeadBoxer
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/leadboxer
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-callrail
+  label: CallRail
+  partner: callrail
+  partner_name: CallRail
+  category: Call Tracking
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/callrail
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-clickfunnels-classic
+  label: ClickFunnels Classic
+  partner: clickfunnels
+  partner_name: ClickFunnels Classic
+  category: Marketing Automation
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/clickfunnels-classic
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-follow-up-boss
+  label: Follow Up Boss
+  partner: follow-up-boss
+  partner_name: Follow Up Boss
+  category: CRM (Customer Relationship Management)
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/follow-up-boss
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-instantly
+  label: Instantly
+  partner: instantly-ai
+  partner_name: Instantly
+  category: Email
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/instantly
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-monday-com
+  label: monday.com
+  partner: monday-com
+  partner_name: monday.com
+  category: Project Management
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/monday
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-clickup
+  label: ClickUp
+  partner: clickup
+  partner_name: ClickUp
+  category: Project Management
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/clickup
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-oncehub
+  label: OnceHub
+  partner_name: OnceHub
+  category: Scheduling & Booking
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/oncehub
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-keap
+  label: Keap
+  partner: keap
+  partner_name: Keap
+  category: CRM (Customer Relationship Management)
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/keap
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-typeform
+  label: Typeform
+  partner: typeform
+  partner_name: Typeform
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/typeform
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-facebook-lead-ads-for-business-admins
+  label: Facebook Lead Ads (for Business admins)
+  partner: facebook-lead-ads
+  partner_name: Facebook Lead Ads (for Business admins)
+  category: Ads & Conversion
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/facebook-lead-ads-beta
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-gravity-forms
+  label: Gravity Forms
+  partner: gravity-forms
+  partner_name: Gravity Forms
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/gravity-forms
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-webinarjam-everwebinar
+  label: WebinarJam / EverWebinar
+  partner: webinarjam
+  partner_name: WebinarJam / EverWebinar
+  category: Webinars
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/webinarjam
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-facebook-lead-ads
+  label: Facebook Lead Ads
+  partner: facebook-lead-ads
+  partner_name: Facebook Lead Ads
+  category: Ads & Conversion
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/facebook-lead-ads
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-google-forms
+  label: Google Forms
+  partner: google-forms
+  partner_name: Google Forms
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/google-forms
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-calendly
+  label: Calendly
+  partner: calendly
+  partner_name: Calendly
+  category: Scheduling & Booking
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/calendly
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-microsoft-excel
+  label: Microsoft Excel
+  partner_name: Microsoft Excel
+  category: Microsoft
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/excel
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-jotform
+  label: Jotform
+  partner: jotform
+  partner_name: Jotform
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/jotform
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-bonzo
+  label: BONZO
+  partner_name: BONZO
+  category: CRM (Customer Relationship Management)
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/bonzo
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: kixie-vanillasoft
+  label: VanillaSoft
+  partner_name: VanillaSoft
+  category: CRM (Customer Relationship Management)
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/kixie/integrations/vanillasoft
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
   arazzo: null
