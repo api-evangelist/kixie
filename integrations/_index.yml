@@ -492,6 +492,67 @@
     detected: '2026-10-21'
   status: not-a-workflow
   arazzo: null
+- slug: kixie-hubspot-app-certification
+  label: HubSpot App Certification
+  partner: hubspot
+  partner_name: HubSpot App Certification
+  category: HubSpot certified app publisher
+  type: register
+  channel: standard-directory
+  evidence: https://ecosystem.hubspot.com/marketplace/explore?eco_PRODUCT_TYPE=APP&eco_CERTIFIED=true
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: HubSpot App Marketplace Certified Apps (CERTIFIED filter on the storefront's public search JSON)
+    standard: HubSpot App Certification
+    spec_file: null
+    role: certified-app-publisher
+    registered_name: Kixie
+    matched_domain: kixie.com
+    matched_by: domain
+    identity_source: the listing's own companyUrl (no lookup)
+    certified_products:
+    - product: HubSpot Certified App
+      product_type: APP
+      certifier: HubSpot (App Certification)
+      listings: 1
+      example_listing: https://ecosystem.hubspot.com/marketplace/listing/kixie
+      lapsed: false
+      lapsed_note: the certified flag is printed on a LIVE public listing card (CERTIFIED filter); HubSpot prints
+        no certification date, so the badge reads as current
+    signal_note: certified_products = ONE entry per product type (HubSpot Certified App), never per listing; listing
+      counts are context
+    detected_by: sweep-hubspot-app-marketplace.py
+    detected: '2026-10-21'
+  status: not-a-workflow
+  arazzo: null
+- slug: kixie-hubspot-solutions-partner-directory
+  label: HubSpot Solutions Partner directory
+  partner: hubspot
+  partner_name: HubSpot Solutions Partner directory
+  category: HubSpot solutions partner
+  type: register
+  channel: standard-directory
+  evidence: https://ecosystem.hubspot.com/marketplace/solutions/kixieagency
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: HubSpot Solutions Partner directory (storefront public search JSON + profile:<slug> listing JSON)
+    standard: HubSpot Solutions Partner Program
+    spec_file: null
+    role: hubspot-solutions-partner
+    registered_name: Kixie
+    register_id: kixieagency
+    matched_domain: kixie.com
+    matched_by: domain
+    partner_tier: null
+    identity_source: the profile's own companyUrl (no lookup)
+    signal_note: 'participation only: directory profile (tier, accreditations, ratings are context, never counted)'
+    context: {}
+    detected_by: sweep-hubspot-app-marketplace.py
+    detected: '2026-10-21'
+  status: not-a-workflow
+  arazzo: null
 - slug: kixie-salesforce-own
   label: Salesforce (own)
   partner: salesforce
@@ -501,6 +562,19 @@
   marketplace: own
   channel: partner-built
   evidence: https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000G5vT0UAJ
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: kixie-hubspot-own
+  label: HubSpot (own)
+  partner: hubspot
+  partner_name: HubSpot (own)
+  category: SMS
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://ecosystem.hubspot.com/marketplace/listing/kixie
   source: edge
   relationship: platform-app
   status: not-a-workflow
